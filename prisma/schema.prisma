@@ -7,12 +7,13 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+/// Transaction records persist the `type` field as plain text so that the
+/// model remains compatible with SQLite, which has no native enum support.
 model Transaction {
   id        Int      @id @default(autoincrement())
   amount    Float
   category  String
   note      String?
-  /// Stored as a plain string because SQLite does not support enums.
   type      String
   date      DateTime @default(now())
   createdAt DateTime @default(now())
