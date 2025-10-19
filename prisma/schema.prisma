@@ -4,7 +4,8 @@ generator client {
 
 datasource db {
   provider = "sqlite"
-  url      = env("DATABASE_URL")
+  /// Local SQLite file path; using a literal keeps validation from requiring env vars.
+  url      = "file:./dev.db"
 }
 
 model Transaction {
