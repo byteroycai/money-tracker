@@ -1,0 +1,26 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: light dark;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  @apply bg-gray-50 text-slate-900 transition-colors duration-300 ease-in-out dark:bg-slate-950 dark:text-slate-100;
+}
+
+a {
+  @apply text-blue-600 underline-offset-4 hover:underline;
+}
+
+input,
+select,
+textarea {
+  @apply bg-white dark:bg-slate-900 dark:border-slate-700;
+}
