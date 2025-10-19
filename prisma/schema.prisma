@@ -1,0 +1,21 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  /// Local SQLite file path; using a literal keeps validation from requiring env vars.
+  url      = "file:./dev.db"
+}
+
+model Transaction {
+  id        Int      @id @default(autoincrement())
+  amount    Float
+  category  String
+  note      String?
+  /// Represented as a string ("INCOME" | "EXPENSE") because SQLite does not support enum columns.
+  type      String
+  date      DateTime @default(now())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
