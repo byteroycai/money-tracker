@@ -1,33 +1,23 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
-import {
-  TRANSACTION_TYPES,
-  type TransactionDto,
-  type TransactionType
-} from "@/types/transactions";
-
-const TRANSACTION_TYPE_VALUES = new Set<string>(TRANSACTION_TYPES);
+import type { TransactionDto } from "@/types/transactions";
+import { TransactionType } from "@prisma/client";
 
 const serialize = (transaction: {
   id: number;
   amount: number;
   category: string;
   note: string | null;
-  type: string;
+  type: TransactionType;
   date: Date;
 }): TransactionDto => ({
   id: transaction.id,
   amount: transaction.amount,
   category: transaction.category,
   note: transaction.note ?? "",
-  type: TRANSACTION_TYPE_VALUES.has(transaction.type)
-    ? (transaction.type as TransactionType)
-    : "EXPENSE",
+  type: transaction.type,
   date: transaction.date.toISOString()
 });
-
-const isTransactionType = (value: unknown): value is TransactionType =>
-  typeof value === "string" && TRANSACTION_TYPE_VALUES.has(value);
 
 export async function GET() {
   try {
@@ -48,7 +38,7 @@ export async function POST(request: Request) {
     const category = String(payload.category ?? "").trim();
     const note = typeof payload.note === "string" ? payload.note.trim() : "";
     const date = payload.date ? new Date(payload.date) : new Date();
-    const type = payload.type;
+    const type = payload.type as TransactionType;
 
     if (!Number.isFinite(amount) || amount <= 0) {
       return NextResponse.json({ message: "金额不合法" }, { status: 400 });
@@ -58,7 +48,7 @@ export async function POST(request: Request) {
       return NextResponse.json({ message: "类别不能为空" }, { status: 400 });
     }
 
-    if (!isTransactionType(type)) {
+    if (!Object.values(TransactionType).includes(type)) {
       return NextResponse.json({ message: "类型不正确" }, { status: 400 });
     }
 
