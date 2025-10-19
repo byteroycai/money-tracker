@@ -7,10 +7,6 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-enum TransactionType {
-  INCOME
-  EXPENSE
-}
 
 model Transaction {
   id        Int              @id @default(autoincrement())
